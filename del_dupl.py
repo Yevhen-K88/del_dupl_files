@@ -1,6 +1,7 @@
 import os
 import shutil
 import random
+import sys
 
 def move_unique_and_delete_duplicates(root_folder):
     seen_filenames = set()
@@ -52,6 +53,14 @@ def random_sort(root_folder):
 
 # Вкажи шлях до кореневої папки
 if __name__ == "__main__":
-    path_to_check = "D:/111"
+    # Визначаємо папку, де розташований .py або .exe
+    if getattr(sys, 'frozen', False):
+        # Якщо запаковано у .exe
+        path_to_check = os.path.dirname(sys.executable)
+    else:
+        # Якщо запускається як скрипт .py
+        path_to_check = os.path.dirname(os.path.abspath(__file__))
+
+    # path_to_check = "D:/111"
     move_unique_and_delete_duplicates(path_to_check)
     random_sort(path_to_check)
