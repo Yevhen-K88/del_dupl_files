@@ -1,24 +1,45 @@
 import os
+import shutil
 
-
-def delete_duplicate_filenames(root_folder):
+def move_unique_and_delete_duplicates(root_folder):
     seen_filenames = set()
     duplicates = []
 
     for dirpath, _, filenames in os.walk(root_folder):
         for filename in filenames:
-            if filename in seen_filenames:
-                filepath = os.path.join(dirpath, filename)
-                print(f"Видаляється дублікат: {filepath}")
-                os.remove(filepath)
-                duplicates.append(filepath)
-            else:
+            src_path = os.path.join(dirpath, filename)
+            dst_path = os.path.join(root_folder, filename)
+
+            # Пропускаємо файли з кореня
+            if dirpath == root_folder:
                 seen_filenames.add(filename)
+                continue
+
+            if filename in seen_filenames:
+                print(f"Видаляється дублікат: {src_path}")
+                os.remove(src_path)
+                duplicates.append(src_path)
+            else:
+                if not os.path.exists(dst_path):
+                    print(f"Переміщується: {src_path} → {dst_path}")
+                    shutil.move(src_path, dst_path)
+                    seen_filenames.add(filename)
+                else:
+                    print(f"Видаляється дублікат (уже є в корені): {src_path}")
+                    os.remove(src_path)
+                    duplicates.append(src_path)
+
+    # Видалення порожніх підкаталогів (знизу догори)
+    for dirpath, dirnames, filenames in os.walk(root_folder, topdown=False):
+        if dirpath == root_folder:
+            continue
+        if not os.listdir(dirpath):  # Порожній каталог
+            print(f"Видаляється порожня папка: {dirpath}")
+            os.rmdir(dirpath)
 
     print(f"\nЗагалом видалено дублікатів: {len(duplicates)}")
 
-
-# Заміни цей шлях на свій
+# Вкажи шлях до кореневої папки
 if __name__ == "__main__":
-    path_to_check = "шлях/до/твоєї/папки"
-    delete_duplicate_filenames(path_to_check)
+    path_to_check = "D:/111"
+    move_unique_and_delete_duplicates(path_to_check)
