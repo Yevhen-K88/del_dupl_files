@@ -1,5 +1,6 @@
 import os
 import shutil
+import random
 
 def move_unique_and_delete_duplicates(root_folder):
     seen_filenames = set()
@@ -39,7 +40,18 @@ def move_unique_and_delete_duplicates(root_folder):
 
     print(f"\nЗагалом видалено дублікатів: {len(duplicates)}")
 
+def random_sort(root_folder):
+    for name in os.listdir(root_folder):
+        full_path = os.path.join(root_folder, name)
+        if os.path.isfile(full_path):
+            number = random.randint(0, 9999)
+            prefix = f"{number:04d}"  # доповнює нулями до 4 цифр
+            new_name = os.path.join(root_folder, f"{prefix}_{name}")
+            os.rename(full_path, new_name)
+
+
 # Вкажи шлях до кореневої папки
 if __name__ == "__main__":
     path_to_check = "D:/111"
     move_unique_and_delete_duplicates(path_to_check)
+    random_sort(path_to_check)
