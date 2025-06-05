@@ -41,6 +41,7 @@ def move_unique_and_delete_duplicates(root_folder):
 
     print(f"\nЗагалом видалено дублікатів: {len(duplicates)}")
 
+# додавання цифрового префіксу в назву файлу для випадокового сортування
 def random_sort(root_folder):
     for name in os.listdir(root_folder):
         full_path = os.path.join(root_folder, name)
